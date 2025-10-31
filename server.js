@@ -69,7 +69,8 @@ app.get('/', (req, res) => {
 app.get('/books', async (req, res) => {
    try {
     // Because I am finding from the model
-    const books=(await Book.find()).sort({createdAt:-1});
+const books = await Book.find().sort({ createdAt: -1 });
+
     res.json(books);
    } catch (error) {
     res.status(500).json({
