@@ -68,14 +68,11 @@ app.get('/', (req, res) => {
 // Get all books
 app.get('/books', async (req, res) => {
    try {
-    // Because I am finding from the model
-const books = await Book.find().sort({ createdAt: -1 });
-
-    res.json(books);
+      const books = await Book.find().sort({ createdAt: -1 });
+      res.json(books);
    } catch (error) {
-    res.status(500).json({
-        message:"Server error"
-    })
+      console.error("Error fetching books:", error);
+      res.status(500).json({ message: "Server error" });
    }
 });
 
