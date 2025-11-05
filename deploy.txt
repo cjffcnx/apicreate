@@ -1,1 +1,166 @@
-https://apicreate.onrender.com/books
+
+API Documentation: Book Management System
+
+This document explains how the Book API hosted at https://apicreate.onrender.com works.
+
+--------------------------------------------
+1. Introduction
+--------------------------------------------
+This API is built using Node.js, Express, and MongoDB. It allows users to perform CRUD operations (Create, Read, Update, Delete) on books.
+
+The application connects to MongoDB using Mongoose. Data is stored in a 'Book' collection where each book has the following properties:
+- title (String, required)
+- author (String, optional)
+- createdAt (Date, automatically generated)
+- updatedAt (Date, automatically updated)
+
+--------------------------------------------
+2. Server Setup
+--------------------------------------------
+The server uses Express to handle HTTP requests and Mongoose for database interaction. It loads the database connection string from the .env file.
+
+Command to run:
+> node index.js
+
+--------------------------------------------
+3. API Endpoints
+--------------------------------------------
+
+BASE URL: https://apicreate.onrender.com
+
+--------------------------------------------
+A. GET /books
+--------------------------------------------
+Fetch all books from the database.
+
+Request: 
+    Method: GET
+    URL: https://apicreate.onrender.com/books
+
+Response Example:
+[
+  {
+    "_id": "6549d22a9b5b0b7d9e1a2f11",
+    "title": "Harry Potter",
+    "author": "J.K. Rowling",
+    "createdAt": "2025-11-05T10:00:00Z",
+    "updatedAt": "2025-11-05T10:00:00Z"
+  }
+]
+
+--------------------------------------------
+B. POST /books
+--------------------------------------------
+Add a new book to the database.
+
+Request:
+    Method: POST
+    URL: https://apicreate.onrender.com/books
+    Body (JSON):
+    {
+      "title": "Atomic Habits",
+      "author": "James Clear"
+    }
+
+Response Example:
+{
+  "message": "Book is added successfully",
+  "book": {
+    "_id": "6549d25a9b5b0b7d9e1a2f12",
+    "title": "Atomic Habits",
+    "author": "James Clear",
+    "createdAt": "2025-11-05T10:10:00Z",
+    "updatedAt": "2025-11-05T10:10:00Z"
+  }
+}
+
+Error Example:
+If title is missing:
+{
+  "message": "Title is required"
+}
+
+--------------------------------------------
+C. PUT /books/:id
+--------------------------------------------
+Update an existing book by its ID.
+
+Request:
+    Method: PUT
+    URL: https://apicreate.onrender.com/books/6549d25a9b5b0b7d9e1a2f12
+    Body (JSON):
+    {
+      "title": "The Lord of the Rings",
+      "author": "J.R.R. Tolkien"
+    }
+
+Response Example:
+{
+  "message": "Book updated successfully",
+  "book": {
+    "_id": "6549d25a9b5b0b7d9e1a2f12",
+    "title": "The Lord of the Rings",
+    "author": "J.R.R. Tolkien",
+    "createdAt": "2025-11-05T10:10:00Z",
+    "updatedAt": "2025-11-05T10:30:00Z"
+  }
+}
+
+Error Example:
+If the ID does not exist:
+{
+  "message": "Book not found"
+}
+
+--------------------------------------------
+D. DELETE /books/:id
+--------------------------------------------
+Delete a book from the database by ID.
+
+Request:
+    Method: DELETE
+    URL: https://apicreate.onrender.com/books/6549d25a9b5b0b7d9e1a2f12
+
+Response Example:
+{
+  "message": "Book has been deleted successfully"
+}
+
+Error Example:
+If the book is not found:
+{
+  "message": "Book not found"
+}
+
+--------------------------------------------
+4. Book Schema Definition (Mongoose)
+--------------------------------------------
+const bookSchema = new mongoose.Schema({
+  title: { type: String, required: [true, 'Title is required'] },
+  author: { type: String, trim: true },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date }
+});
+
+bookSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
+});
+
+const Book = mongoose.model('Book', bookSchema);
+
+--------------------------------------------
+5. Notes
+--------------------------------------------
+- Ensure MongoDB URL is set in .env as MONGODB_URL.
+- Make sure to use proper JSON format in request bodies.
+- Server runs on port defined in environment variable PORT or defaults to 3000.
+
+--------------------------------------------
+6. Conclusion
+--------------------------------------------
+This API allows full management of a book collection using standard RESTful routes. It can be integrated into a frontend interface for library management or book tracking systems.
+
+--------------------------------------------
+End of Document
+--------------------------------------------
